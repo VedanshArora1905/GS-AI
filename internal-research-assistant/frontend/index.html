@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Internal Research Assistant</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      max-width: 600px;
+      margin: auto;
+      background-color: #f4f4f4;
+    }
+    h2 {
+      color: #333;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #answer {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Ask a Question</h2>
+  <form id="query-form">
+    <input type="text" id="question" placeholder="Type your question..." required>
+    <button type="submit">Ask</button>
+  </form>
+  <p><strong>Answer:</strong> <span id="answer"></span></p>
+
+  <script>
+    const form = document.getElementById('query-form');
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const question = document.getElementById('question').value;
+      const formData = new FormData();
+      formData.append('question', question);
+
+      try {
+        const res = await fetch('/ask', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        document.getElementById('answer').innerText = data.answer || 'No answer found.';
+      } catch (err) {
+        document.getElementById('answer').innerText = 'Error: Unable to fetch answer.';
+        console.error(err);
+      }
+    };
+  </script>
+</body>
+</html>
